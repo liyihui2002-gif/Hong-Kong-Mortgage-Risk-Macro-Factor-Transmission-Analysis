@@ -5917,9 +5917,25 @@
     },
     "stress_peak": {
       "period": "2024-07",
-      "index_equal": 58.72595995210801,
-      "index_rate_dominant": 60.658118796850424,
-      "index_borrower_dominant": 59.676582667376465
+      "index_equal": 58.72595995210801
+    },
+    "stress_peaks": {
+      "equal": {
+        "period": "2024-07",
+        "value": 58.72595995210801
+      },
+      "rate_dominant": {
+        "period": "2024-07",
+        "value": 60.658118796850424
+      },
+      "borrower_dominant": {
+        "period": "2024-09",
+        "value": 59.919417686007556
+      }
+    },
+    "hibor_3m_sample_peak": {
+      "period": "2023-11",
+      "value_pct": 5.438116818181818
     },
     "stress_weights": {
       "equal": {
@@ -6100,7 +6116,7 @@
     },
     {
       "period": "2023-08",
-      "label": "HIBOR peak / cycle transition"
+      "label": "Cycle transition (analyst-defined)"
     },
     {
       "period": "2023-09",

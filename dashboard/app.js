@@ -255,7 +255,6 @@
   function renderFindings() {
     const rateApplication = bestLag("hibor_3m_pct", "new_applications_received");
     const applicationTransaction = bestLag("new_applications_received", "residential_transactions");
-    const transactionApplication = bestLag("residential_transactions", "new_applications_received");
     const rateEquity = bestLag("hibor_3m_pct", "negative_equity_count");
     const zh = state.language === "zh";
     const applicationDrop = Math.round((1 - 9369.8 / 12543.6) * 100);
@@ -263,11 +262,11 @@
       ? `3M HIBOR 与申请宗数的同期相关系数为 ${rateApplication.correlation.toFixed(2)}；加息期平均申请量比加息前低约 ${applicationDrop}%。这支持“利率上行伴随需求收缩”，但不构成因果识别。`
       : `The contemporaneous correlation between 3M HIBOR and applications is ${rateApplication.correlation.toFixed(2)}; average applications in the hiking window are about ${applicationDrop}% below the pre-hiking window. This supports co-movement, not causal identification.`;
     document.getElementById("findingLag").textContent = zh
-      ? `申请与成交量的最高相关出现在滞后 ${applicationTransaction.lag_months} 个月（r=${applicationTransaction.correlation.toFixed(2)}）；反向检验为 ${transactionApplication.lag_months} 个月（r=${transactionApplication.correlation.toFixed(2)}），更像同步循环而非稳定单向传导。`
-      : `Applications and transactions peak at a ${applicationTransaction.lag_months}-month lag (r=${applicationTransaction.correlation.toFixed(2)}); the reverse test gives ${transactionApplication.lag_months} months (r=${transactionApplication.correlation.toFixed(2)}), consistent with a synchronous cycle rather than a stable one-way transmission.`;
+      ? `申请与成交量的最高相关出现在滞后 ${applicationTransaction.lag_months} 个月（r=${applicationTransaction.correlation.toFixed(2)}）；交换变量只是同一交叉相关的镜像，不构成独立检验，因此更像同步循环而非稳定单向传导。`
+      : `Applications and transactions peak at a ${applicationTransaction.lag_months}-month lag (r=${applicationTransaction.correlation.toFixed(2)}); reversing the pair mirrors the same cross-correlation rather than adding an independent check, consistent with a synchronous cycle rather than a stable one-way transmission.`;
     document.getElementById("findingEquity").textContent = zh
-      ? `HIBOR 与负资产宗数的最强相关出现在 ${rateEquity.lag_months} 个月滞后（r=${rateEquity.correlation.toFixed(2)}）。负资产按季度公布，且价格/估值共同趋势可能放大相关。`
-      : `The strongest HIBOR/negative-equity relationship appears at a ${rateEquity.lag_months}-month lag (r=${rateEquity.correlation.toFixed(2)}). Negative equity is quarterly and shared valuation trends may amplify the correlation.`;
+      ? `在预设 ±12 个月搜索窗口内，HIBOR 与负资产宗数的最强相关出现在 +${rateEquity.lag_months} 个月边界（r=${rateEquity.correlation.toFixed(2)}）。这是搜索上限而非已识别的传导周期；负资产按季度公布，且价格/估值共同趋势可能放大相关。`
+      : `Within the pre-set ±12-month search window, the strongest HIBOR/negative-equity relationship appears at the +${rateEquity.lag_months}-month boundary (r=${rateEquity.correlation.toFixed(2)}). This is a search-window limit rather than an identified transmission period; negative equity is quarterly and shared valuation trends may amplify the correlation.`;
   }
 
   function renderCycle() {
@@ -281,8 +280,8 @@
         en: "Rapid rate increase with simultaneous demand and transaction contraction",
       },
       post_hiking: {
-        zh: "利率高位，负资产规模达到历史峰值",
-        en: "High rates coincide with the peak in negative-equity cases",
+        zh: "利率高位，负资产规模达到本研究样本期峰值",
+        en: "High rates coincide with the sample-period peak in negative-equity cases",
       },
     };
     document.getElementById("cycleTrack").innerHTML = data.periods.map((row, index) => `
@@ -510,6 +509,22 @@
       height,
       (row) => `<strong>${row.period}</strong>Equal: ${decimalFormat.format(row.stress_index_equal)}<br>Rate-led: ${decimalFormat.format(row.stress_index_rate_dominant)}<br>Borrower-led: ${decimalFormat.format(row.stress_index_borrower_dominant)}`
     );
+    const peaks = data.summary.stress_peaks || {};
+    const schemeLabel = { equal: "等权", rate_dominant: "利率主导", borrower_dominant: "借款人主导" };
+    const schemeLabelEn = { equal: "Equal", rate_dominant: "Rate-led", borrower_dominant: "Borrower-led" };
+    const zh = state.language === "zh";
+    const names = zh ? schemeLabel : schemeLabelEn;
+    const peakNote = document.getElementById("stressPeakNote");
+    if (peakNote && peaks.equal) {
+      const parts = ["equal", "rate_dominant", "borrower_dominant"].map(
+        (key) => `${names[key]}峰值 ${decimalFormat.format(peaks[key].value)}（${peaks[key].period}）`
+      );
+      peakNote.textContent = zh
+        ? `${parts.join("；")}。三套方案高压力时段大致接近，但峰值月份并不完全相同。`
+        : `${["equal", "rate_dominant", "borrower_dominant"].map(
+            (key) => `${names[key]} peak ${decimalFormat.format(peaks[key].value)} (${peaks[key].period})`
+          ).join("; ")}. High-stress windows broadly agree, but peak months differ.`;
+    }
   }
 
   function renderPeriodTable() {

@@ -72,7 +72,7 @@ def build() -> None:
         "summary": summary,
         "events": [
             {"period": "2022-03", "label": "Hiking cycle begins"},
-            {"period": "2023-08", "label": "HIBOR peak / cycle transition"},
+            {"period": "2023-08", "label": "Cycle transition (analyst-defined)"},
             {"period": "2023-09", "label": "Post-hiking window"},
         ],
     }

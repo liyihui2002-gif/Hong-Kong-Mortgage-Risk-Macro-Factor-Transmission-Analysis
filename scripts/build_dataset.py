@@ -313,7 +313,18 @@ def build() -> None:
     )
     best_lags.to_csv(PROCESSED / "best_lags.csv", index=False, float_format="%.6f")
 
-    peak = merged.loc[merged["stress_index_equal"].idxmax()]
+    stress_columns = {
+        "equal": "stress_index_equal",
+        "rate_dominant": "stress_index_rate_dominant",
+        "borrower_dominant": "stress_index_borrower_dominant",
+    }
+    stress_peaks = {}
+    for scheme, column in stress_columns.items():
+        row = merged.loc[merged[column].idxmax()]
+        stress_peaks[scheme] = {
+            "period": str(row["period"]),
+            "value": float(row[column]),
+        }
     summary = {
         "sample_start": str(merged["period"].min()),
         "sample_end": str(merged["period"].max()),
@@ -324,10 +335,13 @@ def build() -> None:
             "post_hiking": {"start": "2023-09", "end": "2025-12", "label": "Post-hiking"},
         },
         "stress_peak": {
-            "period": str(peak["period"]),
-            "index_equal": float(peak["stress_index_equal"]),
-            "index_rate_dominant": float(peak["stress_index_rate_dominant"]),
-            "index_borrower_dominant": float(peak["stress_index_borrower_dominant"]),
+            "period": stress_peaks["equal"]["period"],
+            "index_equal": stress_peaks["equal"]["value"],
+        },
+        "stress_peaks": stress_peaks,
+        "hibor_3m_sample_peak": {
+            "period": str(merged.loc[merged["hibor_3m_pct"].idxmax(), "period"]),
+            "value_pct": float(merged["hibor_3m_pct"].max()),
         },
         "stress_weights": weight_sets,
         "period_summary": period_summary.to_dict(orient="records"),

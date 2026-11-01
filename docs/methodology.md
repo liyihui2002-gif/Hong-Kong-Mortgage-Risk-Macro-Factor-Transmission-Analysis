@@ -17,7 +17,7 @@
   - Hiking cycle: 2022-03 to 2023-08
   - Post-hiking: 2023-09 to 2025-12
 
-The regime boundaries are analyst-defined from the sustained rise and subsequent high plateau in the 3-month HIBOR cycle. They are comparison windows, not estimated structural breaks.
+The regime boundaries are analyst-defined from the sustained rise and subsequent high plateau in the 3-month HIBOR cycle. They are comparison windows, not estimated structural breaks. The August 2023 boundary is a researcher-chosen transition date; in this sample the 3-month HIBOR monthly average actually reached its maximum of 5.438% in November 2023, so August 2023 is not labelled as the sample HIBOR peak.
 
 ## Derived Variables
 
@@ -51,7 +51,7 @@ stress_index = clip(50 + 10 × stress_z, 0, 100)
 | Rate-dominant | 35% | 30% | 20% | 15% |
 | Borrower-dominant | 25% | 35% | 20% | 20% |
 
-The three variants peak within 58.7 to 60.7 and in the same broad high-stress window. This supports timing robustness but does not validate the index as a probability model.
+The three variants peak in a shared high-stress window but not in an identical month: the equal-weight and rate-dominant indices peak at 58.7 and 60.7 in July 2024, while the borrower-dominant index peaks at 59.9 in September 2024. This supports timing robustness but does not validate the index as a probability model. Each scheme's peak is computed as its own `idxmax()`, not by reading the other schemes' values at the equal-weight peak row.
 
 ## Lead-Lag Analysis
 
