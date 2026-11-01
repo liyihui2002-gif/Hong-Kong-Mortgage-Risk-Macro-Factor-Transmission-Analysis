@@ -18,8 +18,8 @@
 
 ## 📊 交互式展示与图文总结 (Live Dashboard & Summary)
 
-*   🌐 **[点击查看：项目完整图文分析报告 (Summary Page)](https://yuehaomin-svg.github.io/Hong-Kong-Mortgage-Risk-Macro-Factor-Transmission-Analysis/)**
-*   📈 **[点击体验：中英双语交互式管理仪表盘 (Interactive Dashboard)](https://yuehaomin-svg.github.io/Hong-Kong-Mortgage-Risk-Macro-Factor-Transmission-Analysis/dashboard/)**
+*   🌐 **[点击查看：项目完整图文分析报告 (Summary Page)](https://liyihui2002-gif.github.io/Hong-Kong-Mortgage-Risk-Macro-Factor-Transmission-Analysis/)**
+*   📈 **[点击体验：中英双语交互式管理仪表盘 (Interactive Dashboard)](https://liyihui2002-gif.github.io/Hong-Kong-Mortgage-Risk-Macro-Factor-Transmission-Analysis/dashboard/)**
 
 ---
 
